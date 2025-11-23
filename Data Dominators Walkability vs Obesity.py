@@ -1,32 +1,33 @@
-#Data Dominators Walkability vs Obesity#
+# Data Dominators - Walkability vs Obesity
+# ANLY 615 Final Project
+# Suad Castellanos, Ethan Catoe, Mychael Haywood, Tejas Perwala
+
+# PREREQUISITE FILES:
+#   EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv
+#   COUNTYFP_TX.csv
+#   PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.xlsx
+
 import pandas as pd
 
-# Ethan's Section
 # ====================================================================================================================== #
+#                                                  DATA CLEANING                                                         #
+# ====================================================================================================================== #
+
+# --------- Ethan's Section --------- #
 # filtering walkability dataset down to Texas (state 48)
 walk_path = "EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv"
 print("="*10, f"Importing {walk_path}", "="*10)
 walk_df = pd.read_csv(walk_path)
-
-print("="*10, f"Creating {'walk_tx_df'}", "="*10)
+print("Filtering data down to Texas (FIP code 48000)")
 walk_tx_df = walk_df[walk_df['STATEFP'] == 48]
-
-print("="*10, f"Exporting to {'WalkabilityTX.csv'}", "="*10)
 walk_tx_df.to_csv('WalkabilityTX.csv', index=False)
 
-# ====================================================================================================================== #
-# Import walkability dataset filtered earlier by state (Texas)
-walk_tx_path = "WalkabilityTX.csv"
-print("="*10, f"Importing {walk_tx_path}", "="*10)
-walk_tx_df = pd.read_csv(walk_tx_path)
-
 # Importing and joining county name data on to walkability data
-county_fp_path = "COUNTYFP_TX.csv"
-county_fp_df = pd.read_csv(county_fp_path)
-
+print("Merging Texas county FIP codes with county names.")
+county_fp_df = pd.read_csv("COUNTYFP_TX.csv")
 merged_df = walk_tx_df.merge(county_fp_df, how='left')
 
-# defining new columns with calculations done to collapse date into single rows of county data
+# Defining new columns with calculations done to collapse region data into single rows of county data
 def condense_function(df):
     new_df = pd.Series({
         'COUNTY_POP': df['TotPop'].sum(), # Total population of county
@@ -57,18 +58,21 @@ def condense_function(df):
     return new_df
 new_walk_tx_df = merged_df.groupby(['Texas County']).apply(condense_function).reset_index()
 
-# exporting condensed dataset
+# Exporting condensed dataset to view and verify
+print("Dataset cleaned.")
 output_file = "Walkability_County_Condensed.xlsx"
 with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
     new_walk_tx_df.to_excel(writer, sheet_name='Walkability_Condensed', index=False)
+print("="*10, f"Exported to {output_file}", "="*10)
 
-
-# Tejas' Section 
-
-import pandas as pd
-
-#Load File
-df = pd.read_excel("Texas_df.xlsx")
+# --------- Tejas' Section --------- # 
+# Load File
+# df = pd.read_excel("Texas_df.xlsx")
+health_path = "PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.xlsx"
+print("="*10, f"Importing {health_path}", "="*10)
+df = pd.read_excel(health_path)
+print("Filtering data down to Texas.")
+df = df[df["StateAbbr"] == "TX"]
 
 # Drop Columns
 drop_cols = [
@@ -114,28 +118,42 @@ df_counties = df_counties.rename(columns={
     "LocationName": "Texas County"
 })
 
-#Save Clean Data
+# Save Clean Data
 df_counties.to_excel("df_tx_counties_health.xlsx", index=False)
 
 print("Cleaned file written to df_tx_counties_health.xlsx")
 
-#Mychael/Group Section# 
+# ====================================================================================================================== #
+#                                                  MERGE DATASETS                                                        #
+# ====================================================================================================================== #
+# --------- Mychael/Group Section --------- # 
 import pandas as pd
-import matplotlib.pyplot as plt
-County_Health = pd.read_excel('df_tx_counties_health.xlsx', sheet_name='Sheet1')
-Walkability_Df = pd.read_excel('Walkability_County_Condensed.xlsx', sheet_name='Walkability_Condensed')
-Merged_df = County_Health.merge (Walkability_Df, how='left')
-print (Merged_df.head)
-Merged_df.to_excel('Merged_Data.xlsx', index=False)
 from sqlalchemy import create_engine
+import matplotlib.pyplot as plt
+county_health_df = pd.read_excel('df_tx_counties_health.xlsx', sheet_name='Sheet1')
+walkability_df = pd.read_excel('Walkability_County_Condensed.xlsx', sheet_name='Walkability_Condensed')
+
+merged_df = county_health_df.merge (walkability_df, how='left')
+print (merged_df.head)
+merged_df.to_excel('Merged_Data.xlsx', index=False)
+
 engine = create_engine('sqlite:///my_database.db')
-Merged_df.to_sql('Merged_Main', con=engine, if_exists='replace', index=False)
-query="SELECT 'Texas County', 'TotalPopulation', 'TotalPop18plus', 'Food insecurity in the past 12 months among adults', 'No leisure-time physical activity among adults', 'Obesity among adults', 'pct_low_wage_emp',	'pct_med_wage_emp',	'pct_hi_wage_emp', 'pct_low_wage_wrk', 'pct_med_wage_wrk',	'pct_hi_wage_wrk',	'HH_total', '0_autos_pct',	'1_autos_pct',	'2_autos_pct',	'wtd_WrkAge_pop_pct',	'wtd_avg_walk_index' FROM Merged_Main;"
-Results_df = pd.read_sql(query,engine) 
-print (Results_df.head)
-print (Results_df.describe(include='all'))
+merged_df.to_sql('Merged_Main', con=engine, if_exists='replace', index=False)
+query = """
+    SELECT
+        'TotalPopulation', 'TotalPop18plus', 'Food insecurity in the past 12 months among adults', 
+        'No leisure-time physical activity among adults', 'Obesity among adults', 'pct_low_wage_emp',
+        'pct_med_wage_emp', 'pct_hi_wage_emp', 'pct_low_wage_wrk', 'pct_med_wage_wrk', 'pct_hi_wage_wrk',
+        'HH_total', '0_autos_pct', '1_autos_pct', '2_autos_pct', 'wtd_WrkAge_pop_pct', 'wtd_avg_walk_index'
+    FROM
+        Merged_Main;
+"""
+results_df = pd.read_sql(query, engine) 
+print(results_df.head)
+print(results_df.describe(include='all'))
 
-##----------- Analysis ------------## 
-
+# ====================================================================================================================== #
+#                                                      ANALYSIS                                                          #
+# ====================================================================================================================== #
 
 
