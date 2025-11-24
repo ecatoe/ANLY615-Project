@@ -1,7 +1,7 @@
 #  Data Dominators — Texas Walkability & Food Access Integration
 ### ANLY 615 · Methods Memo · Data Wrangling & Integration
 **Team:** Suad Castellanos · Ethan Catoe · Tejas Perwala · Mychael Haywood  
-**Methods Memo Source:** Project Methods Memo - Data Dominators (1).docx
+**Methods Memo Source:** 
 
 ---
 
