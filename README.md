@@ -1,4 +1,4 @@
-# Data Dominators — Texas Walkability, Food Access, and Obesity Analysis
+# Data Dominators — Texas Walkability, Food Access, Food Insecurity, and Obesity Analysis
 
 ## Project Overview
 This project brings together several public datasets related to walkability, food access, food insecurity, and obesity in Texas. The goal was to clean, standardize, and merge these datasets into one file that can be used for analysis.
