@@ -141,19 +141,6 @@ Full methods memo:
 
 [Project Methods Memo - Data Dominators.docx](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fecatoe%2FANLY615-Project%2Frefs%2Fheads%2Fmain%2FProject%2520Methods%2520Memo%2520-%2520Data%2520Dominators.docx&wdOrigin=BROWSELINK)
 
----
-
-## Recommended Folder Layout
-
-```
-ANLY615-DataDominators/
-│
-├── data/                     # Raw data
-├── cleaned/                  # Clean datasets
-├── code/                     # Python scripts and notebooks
-├── Merged_Main.csv           # Final merged dataset
-└── README.md                 # Project documentation
-```
 
 ---
 
