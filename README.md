@@ -28,7 +28,7 @@ Public datasets used in this project include:
 - [U.S. Census Bureau — County FIPS Codes](https://www.census.gov/library/reference/code-lists/ansi.html)
 
 Files included in this repository:
-- COUNTYFP_TX.csv  
+- [COUNTYFP_TX.csv](https://github.com/ecatoe/ANLY615-Project/blob/main/COUNTYFP_TX.csv)  
 - DD Merged Df_complete.py  
 - Data Dominators Walkability Prep.py  
 - Texas Obesity Cleanup.py  
