@@ -1,11 +1,11 @@
-# 📊 Data Dominators — Texas Walkability & Food Access Integration
+#  Data Dominators — Texas Walkability & Food Access Integration
 ### ANLY 615 · Methods Memo · Data Wrangling & Integration
 **Team:** Suad Castellanos · Ethan Catoe · Tejas Perwala · Mychael Haywood  
 **Methods Memo Source:** Project Methods Memo - Data Dominators (1).docx
 
 ---
 
-## ⭐ Project Overview
+##  Project Overview
 This project integrates multiple public datasets related to:
 
 - Walkability  
@@ -20,7 +20,7 @@ The goal was to create a single, clean, Texas-only dataset that could be used fo
 
 ---
 
-## 🧩 Key Data Wrangling Challenges & Solutions  
+##  Key Data Wrangling Challenges & Solutions  
 
 ### 1. Inconsistent Geographic Boundaries
 Some datasets provided county-level data, while others reported at metro-area levels.
@@ -85,7 +85,7 @@ def condense_function(df):
 
 ---
 
-## 🗂 Database Schema
+##  Database Schema
 
 | Table Name      | Description                                          |
 |-----------------|------------------------------------------------------|
@@ -96,7 +96,7 @@ def condense_function(df):
 
 ---
 
-## 🧮 Final SQL Query
+##  Final SQL Query
 ```sql
 SELECT 
     'Texas County', 
@@ -122,12 +122,13 @@ FROM Merged_Main;
 
 ---
 
-## 🔍 DataFrame Profile
-(Add your `df.info()` and `df.describe()` screenshots here.)
+##  DataFrame Profile
+<img width="879" height="191" alt="image" src="https://github.com/user-attachments/assets/4a24a2a5-1c2f-46d0-ab92-106880f2b826" />
+
 
 ---
 
-## ✅ Summary
+##  Summary
 Through filtering, merging, recalculation, and standardization of identifiers and geographic boundaries, we produced a unified dataset representing all Texas counties. This cleaned dataset supports reliable analysis of the relationships between walkability, food insecurity, and public health outcomes.
 
  
