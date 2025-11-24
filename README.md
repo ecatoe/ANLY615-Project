@@ -1,5 +1,5 @@
 # Data Dominators — Texas Walkability, Food Access, Food Insecurity, and Obesity Analysis
-
+Suad Castellanos, Ethan Catoe, Mychael Haywood, Tejas Perwala
 ## Project Overview
 This project brings together several public datasets related to walkability, food access, food insecurity, and obesity in Texas. The goal was to clean, standardize, and merge these datasets into one file that can be used for analysis.
 
@@ -29,11 +29,11 @@ Public datasets used in this project include:
 
 Files included in this repository:
 - [COUNTYFP_TX.csv](https://github.com/ecatoe/ANLY615-Project/blob/main/COUNTYFP_TX.csv)  
-- [DD Merged Df_complete.py]()  
-- [Data Dominators Walkability Prep.py]()  
-- [Texas Obesity Cleanup.py]()  
-- [walkability_prep_2.py]()
-
+- [Data Dominators Walkability Prep.py](https://github.com/ecatoe/ANLY615-Project/blob/main/Data%20Dominators%20Walkability%20vs%20Obesity.py)  
+- [Texas Obesity Cleanup.py](https://github.com/ecatoe/ANLY615-Project/blob/main/Texas%20Obesity%20Cleanup.py
+)  
+- [walkability_prep_2.py](https://github.com/ecatoe/ANLY615-Project/blob/main/Texas%20Obesity%20Cleanup.py)
+- [DD Merged Df_complete.py](https://github.com/ecatoe/ANLY615-Project/blob/main/DD%20Merged%20Df_complete.py)  
 ---
 
 ## How the Code Works
