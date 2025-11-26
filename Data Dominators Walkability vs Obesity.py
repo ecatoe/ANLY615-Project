@@ -141,10 +141,10 @@ engine = create_engine('sqlite:///my_database.db')
 merged_df.to_sql('Merged_Main', con=engine, if_exists='replace', index=False)
 query = """
     SELECT
-        'TotalPopulation', 'TotalPop18plus', 'Food insecurity in the past 12 months among adults', 
-        'No leisure-time physical activity among adults', 'Obesity among adults', 'pct_low_wage_emp',
-        'pct_med_wage_emp', 'pct_hi_wage_emp', 'pct_low_wage_wrk', 'pct_med_wage_wrk', 'pct_hi_wage_wrk',
-        'HH_total', '0_autos_pct', '1_autos_pct', '2_autos_pct', 'wtd_WrkAge_pop_pct', 'wtd_avg_walk_index'
+        "TotalPopulation", "TotalPop18plus", "Food insecurity in the past 12 months among adults", 
+        "No leisure-time physical activity among adults", "Obesity among adults", "pct_low_wage_emp",
+        "pct_med_wage_emp", "pct_hi_wage_emp", "pct_low_wage_wrk", "pct_med_wage_wrk", "pct_hi_wage_wrk",
+        "HH_total", "0_autos_pct", "1_autos_pct", "2_autos_pct", "wtd_WrkAge_pop_pct", "wtd_avg_walk_index"
     FROM
         Merged_Main;
 """
@@ -155,5 +155,6 @@ print(results_df.describe(include='all'))
 # ====================================================================================================================== #
 #                                                      ANALYSIS                                                          #
 # ====================================================================================================================== #
+
 
 
