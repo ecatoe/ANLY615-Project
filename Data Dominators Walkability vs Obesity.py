@@ -155,6 +155,54 @@ print(results_df.describe(include='all'))
 # ====================================================================================================================== #
 #                                                      ANALYSIS                                                          #
 # ====================================================================================================================== #
+# --------- PCA - Ethan --------- # 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler    # pip install scikit-learn
+from sklearn.decomposition import PCA
 
+df = results_df.copy()
 
+X = df.drop(columns=["Obesity among adults", "TotalPopulation", "TotalPop18plus", "HH_total"])
+y = df["Obesity among adults"]
 
+# Data Normalization
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Run PCA
+pca = PCA()
+X_pca = pca.fit_transform(X_scaled)
+
+print("\nPercentages of explained variance (Scree Plot Data):")
+print(np.round(pca.explained_variance_ratio_, 4))
+
+loadings = pd.DataFrame(
+    pca.components_,
+    columns=X.columns,
+    index=[f"PC{i+1}" for i in range(len(X.columns))]
+)
+
+pca_df = pd.DataFrame(X_pca, columns=[f"PC{i+1}" for i in range(X_pca.shape[1])])
+pca_df['Obesity'] = y.values
+
+# Getting loadings for PC1 & PC2
+loadings = pca.components_.T[:, 0:2]
+
+plt.figure(figsize=(10,8))
+
+# PCA Biplot
+plt.scatter(pca_df["PC1"], pca_df["PC2"], alpha=0.4)
+for i, var in enumerate(X.columns):
+    plt.arrow(0, 0, loadings[i,0]*5, loadings[i,1]*5,
+              head_width=0.05, color='red')
+    plt.text(loadings[i,0]*5*1.1, loadings[i,1]*5*1.1, var,
+             color='darkred', fontsize=9)
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("PCA Biplot")
+plt.grid(True)
+plt.axhline(0, color='black', linewidth=1)
+plt.axvline(0, color='black', linewidth=1)
+plt.show()
