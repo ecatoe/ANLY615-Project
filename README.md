@@ -10,7 +10,7 @@ The main objectives were to:
 - Fix inconsistent identifiers such as state names and FIPS codes
 - Remove duplicate county entries
 - Recalculate totals and weighted values when needed
-- Produce a dataset that is ready for modeling and visualization
+- Preparing the final dataset for PCA, PCR, regression, and plotting
 
 This README provides a summary of the project and instructions for running the code.
 
