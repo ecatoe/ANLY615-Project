@@ -1,0 +1,51 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.linear_model import LinearRegression
+
+for col in walkability_cols:
+    plt.figure()
+    sns.regplot(x=df[col], y=df["Obesity_clean"], scatter_kws={"alpha":0.5})
+    plt.xlabel(col)
+    plt.ylabel("Obesity_clean")
+    plt.title(f"{col} vs Obesity")
+    plt.show()
+
+X_pca_3 = pca.fit_transform(X_scaled)[:, :3]
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+sc = ax.scatter(X_pca_3[:,0], X_pca_3[:,1], X_pca_3[:,2],
+                c=df["Obesity_clean"], cmap="viridis")
+ax.set_xlabel("PC1")
+ax.set_ylabel("PC2")
+ax.set_zlabel("PC3")
+fig.colorbar(sc, label="Obesity_clean")
+plt.show()
+
+x_var="pct_low_wage_emp"
+y_var="pct_med_wage_emp"
+
+x_grid =np.linspace(df[x_var].min(), df[x_var].max(), 30)
+y_grid =np.linspace(df[y_var].min(), df[y_var].max(), 30)
+X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
+
+base = df[walkability_cols].mean() #this averages all of the predictors
+grid_df = pd.DataFrame({
+    col: base[col] for col in walkability_cols
+})
+grid_df[x_var] = X_grid.ravel()
+grid_df[y_var] = Y_grid.ravel()
+
+grid_scaled = scaler.transform(grid_df)
+grid_pca = pca.transform(grid_scaled)
+y_grid_pred = model.predict(grid_pca).reshape(X_grid.shape)
+
+#Plotting#
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(X_grid, Y_grid_pred, cmap= "viridis", alpha=0.8)
+ax.set_xlabel(x_var)
+ax.set_ylabel(y_var)
+ax.set_zlabel("Predicted Obesity")
+plt.show()
