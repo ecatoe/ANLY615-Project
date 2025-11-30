@@ -187,6 +187,10 @@ loadings = pd.DataFrame(
 pca_df = pd.DataFrame(X_pca, columns=[f"PC{i+1}" for i in range(X_pca.shape[1])])
 pca_df['Obesity'] = y.values
 
+corr = pca_df.corr()['Obesity'].sort_values(ascending=False)
+print("\nCorrelation of Principal Components with Obesity:")
+print(corr)
+
 # Getting loadings for PC1 & PC2
 loadings = pca.components_.T[:, 0:2]
 
@@ -393,3 +397,4 @@ sns.heatmap(
 )
 plt.title("Correlation Matrix for Walkability, Food Access, and Health Measures")
 plt.show()
+
