@@ -1,5 +1,5 @@
 # Data Dominators - Walkability vs Obesity
-# ANLY 615 Final Project
+# ANLY 615 Final Project Code
 # Suad Castellanos, Ethan Catoe, Mychael Haywood, Tejas Perwala
 
 # PREREQUISITE FILES:
@@ -7,22 +7,31 @@
 #   COUNTYFP_TX.csv
 #   PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.xlsx
 
+# NECESSARY LIBRARIES:
+#   numpy
+#   pandas
+#   sqlalchemy
+#   scikit-learn
+#   matplotlib
+#   seaborn
+#   pip install numpy pandas sqlalchemy scikit-learn matplotlib seaborn
+
+print("# ====================================================================================================================== #")
+print("#                                                  DATA CLEANING                                                         #")
+print("# ====================================================================================================================== #")
+# --------- Ethan's Section --------- #
 import pandas as pd
 
-# ====================================================================================================================== #
-#                                                  DATA CLEANING                                                         #
-# ====================================================================================================================== #
-
-# --------- Ethan's Section --------- #
-# filtering walkability dataset down to Texas (state 48)
+# Filtering walkability dataset down to Texas (state 48)
 walk_path = "EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv"
 print("="*10, f"Importing {walk_path}", "="*10)
 walk_df = pd.read_csv(walk_path)
 print("Filtering data down to Texas (FIP code 48000)")
 walk_tx_df = walk_df[walk_df['STATEFP'] == 48]
-walk_tx_df.to_csv('WalkabilityTX.csv', index=False)
+# walk_tx_df.to_csv('WalkabilityTX.csv', index=False)
 
 # Importing and joining county name data on to walkability data
+# Source: https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt
 print("Merging Texas county FIP codes with county names.")
 county_fp_df = pd.read_csv("COUNTYFP_TX.csv")
 merged_df = walk_tx_df.merge(county_fp_df, how='left')
@@ -68,9 +77,9 @@ print("="*10, f"Exported to {output_file}", "="*10)
 # --------- Tejas' Section --------- # 
 # Load File
 # df = pd.read_excel("Texas_df.xlsx")
-health_path = "PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.xlsx"
+health_path = "PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.csv"
 print("="*10, f"Importing {health_path}", "="*10)
-df = pd.read_excel(health_path)
+df = pd.read_csv(health_path)
 print("Filtering data down to Texas.")
 df = df[df["StateAbbr"] == "TX"]
 
@@ -123,9 +132,9 @@ df_counties.to_excel("df_tx_counties_health.xlsx", index=False)
 
 print("Cleaned file written to df_tx_counties_health.xlsx")
 
-# ====================================================================================================================== #
-#                                                  MERGE DATASETS                                                        #
-# ====================================================================================================================== #
+print("# ====================================================================================================================== #")
+print("#                                                  MERGE DATASETS                                                        #")
+print("# ====================================================================================================================== #")
 # --------- Mychael/Group Section --------- # 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -152,9 +161,9 @@ results_df = pd.read_sql(query, engine)
 print(results_df.head)
 print(results_df.describe(include='all'))
 
-# ====================================================================================================================== #
-#                                                      ANALYSIS                                                          #
-# ====================================================================================================================== #
+print("# ====================================================================================================================== #")
+print("#                                                      ANALYSIS                                                          #")
+print("# ====================================================================================================================== #")
 # --------- PCA - Ethan --------- # 
 import numpy as np
 import pandas as pd
@@ -212,7 +221,6 @@ plt.axvline(0, color='black', linewidth=1)
 plt.show()
 
 # --------- PCR - Tejas --------- # 
-
 # PCR ANALYSIS
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -223,7 +231,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 # Load Merged DF
 Merged_Data = pd.read_excel(
-    r"C:/Users/tejas/Downloads/Merged_Data.xlsx",
+    "Merged_Data.xlsx",
     sheet_name="Sheet1"
 )
 
@@ -300,8 +308,7 @@ contrib = contrib.sort_values(ascending=False)
 print("\nFeature contributions to Obesity (PCR interpretation):")
 print(contrib)
 
-# --------- Regression Anaylsis - Mychael --------- #
-
+# --------- Regression Analysis - Mychael --------- #
 import seaborn as sns
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -334,8 +341,10 @@ y_grid =np.linspace(df[y_var].min(), df[y_var].max(), 30)
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
 
 base = df[walkability_cols].mean() #this averages all of the predictors
+n = X_grid.size
+
 grid_df = pd.DataFrame({
-    col: base[col] for col in walkability_cols
+    col: np.full(n, base[col]) for col in walkability_cols
 })
 grid_df[x_var] = X_grid.ravel()
 grid_df[y_var] = Y_grid.ravel()
@@ -344,24 +353,23 @@ grid_scaled = scaler.transform(grid_df)
 grid_pca = pca.transform(grid_scaled)
 y_grid_pred = model.predict(grid_pca).reshape(X_grid.shape)
 
-#Plotting#
+# Plotting #
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X_grid, Y_grid_pred, cmap= "viridis", alpha=0.8)
+ax.plot_surface(X_grid, Y_grid, y_grid_pred, cmap= "viridis", alpha=0.8)
 ax.set_xlabel(x_var)
 ax.set_ylabel(y_var)
 ax.set_zlabel("Predicted Obesity")
 plt.show()
 
-# --------- # Plotting script for the Data Dominators project  - Suad --------- # 
-
+# --------- Plotting script for the Data Dominators project - Suad --------- # 
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # load the merged dataset
-df = pd.read_excel("Merged_Data.xlsx")
+# df = pd.read_excel("Merged_Data.xlsx")
 
 # Walkability vs Obesity
 plt.figure(figsize=(8, 6))
@@ -378,8 +386,8 @@ plt.show()
 
 # Food Insecurity vs Obesity
 plt.figure(figsize=(8, 6))
-plt.scatter(df["Food insecurity in the past 12 months among adults"], 
-            df["Obesity among adults"], 
+plt.scatter(results_df["Food insecurity in the past 12 months among adults"], 
+            results_df["Obesity among adults"], 
             alpha=0.6)
 plt.xlabel("Food Insecurity (%)")
 plt.ylabel("Obesity (%)")
@@ -397,4 +405,3 @@ sns.heatmap(
 )
 plt.title("Correlation Matrix for Walkability, Food Access, and Health Measures")
 plt.show()
-
