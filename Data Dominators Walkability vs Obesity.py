@@ -2,7 +2,7 @@
 # ANLY 615 Final Project Code
 # Suad Castellanos, Ethan Catoe, Mychael Haywood, Tejas Perwala
 
-# PREREQUISITE FILES:
+# INPUT FILES:
 #   EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv
 #   COUNTYFP_TX.csv
 #   PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.xlsx
@@ -23,7 +23,7 @@ print("# =======================================================================
 import pandas as pd
 
 # Filtering walkability dataset down to Texas (state 48)
-walk_path = "EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv"
+walk_path = "InputData/EPA_SmartLocationDatabase_V3_Jan_2021_Final.csv"
 print("="*10, f"Importing {walk_path}", "="*10)
 walk_df = pd.read_csv(walk_path)
 print("Filtering data down to Texas (FIP code 48000)")
@@ -33,7 +33,7 @@ walk_tx_df = walk_df[walk_df['STATEFP'] == 48]
 # Importing and joining county name data on to walkability data
 # Source: https://transition.fcc.gov/oet/info/maps/census/fips/fips.txt
 print("Merging Texas county FIP codes with county names.")
-county_fp_df = pd.read_csv("COUNTYFP_TX.csv")
+county_fp_df = pd.read_csv("InputData/COUNTYFP_TX.csv")
 merged_df = walk_tx_df.merge(county_fp_df, how='left')
 
 # Defining new columns with calculations done to collapse region data into single rows of county data
@@ -69,7 +69,7 @@ new_walk_tx_df = merged_df.groupby(['Texas County']).apply(condense_function).re
 
 # Exporting condensed dataset to view and verify
 print("Dataset cleaned.")
-output_file = "Walkability_County_Condensed.xlsx"
+output_file = "OutputData/Walkability_County_Condensed.xlsx"
 with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
     new_walk_tx_df.to_excel(writer, sheet_name='Walkability_Condensed', index=False)
 print("="*10, f"Exported to {output_file}", "="*10)
@@ -77,7 +77,7 @@ print("="*10, f"Exported to {output_file}", "="*10)
 # --------- Tejas' Section --------- # 
 # Load File
 # df = pd.read_excel("Texas_df.xlsx")
-health_path = "PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.csv"
+health_path = "InputData/PLACES__Local_Data_for_Better_Health,_County_Data_2024_release_20251119.csv"
 print("="*10, f"Importing {health_path}", "="*10)
 df = pd.read_csv(health_path)
 print("Filtering data down to Texas.")
@@ -128,9 +128,9 @@ df_counties = df_counties.rename(columns={
 })
 
 # Save Clean Data
-df_counties.to_excel("df_tx_counties_health.xlsx", index=False)
+df_counties.to_excel("OutputData/df_tx_counties_health.xlsx", index=False)
 
-print("Cleaned file written to df_tx_counties_health.xlsx")
+print("Cleaned file written to OutputData/df_tx_counties_health.xlsx")
 
 print("# ====================================================================================================================== #")
 print("#                                                  MERGE DATASETS                                                        #")
@@ -139,14 +139,14 @@ print("# =======================================================================
 import pandas as pd
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
-county_health_df = pd.read_excel('df_tx_counties_health.xlsx', sheet_name='Sheet1')
-walkability_df = pd.read_excel('Walkability_County_Condensed.xlsx', sheet_name='Walkability_Condensed')
+county_health_df = pd.read_excel('OutputData/df_tx_counties_health.xlsx', sheet_name='Sheet1')
+walkability_df = pd.read_excel('OutputData/Walkability_County_Condensed.xlsx', sheet_name='Walkability_Condensed')
 
 merged_df = county_health_df.merge (walkability_df, how='left')
 print (merged_df.head)
-merged_df.to_excel('Merged_Data.xlsx', index=False)
+merged_df.to_excel('OutputData/Merged_Data.xlsx', index=False)
 
-engine = create_engine('sqlite:///my_database.db')
+engine = create_engine('sqlite:///OutputData/my_database.db')
 merged_df.to_sql('Merged_Main', con=engine, if_exists='replace', index=False)
 query = """
     SELECT
@@ -231,7 +231,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 # Load Merged DF
 Merged_Data = pd.read_excel(
-    "Merged_Data.xlsx",
+    "OutputData/Merged_Data.xlsx",
     sheet_name="Sheet1"
 )
 
@@ -369,7 +369,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # load the merged dataset
-# df = pd.read_excel("Merged_Data.xlsx")
+# df = pd.read_excel("OutputData/Merged_Data.xlsx")
 
 # Walkability vs Obesity
 plt.figure(figsize=(8, 6))
