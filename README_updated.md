@@ -11,6 +11,8 @@ The main objectives were to:
 - Remove duplicate county entries
 - Recalculate totals and weighted values when needed
 - Preparing the final dataset for PCA, PCR, regression, and plotting
+- Conduct PCA, PCR, and regression analyses
+- Plot the data
 
 This README provides a summary of the project and instructions for running the code.
 
